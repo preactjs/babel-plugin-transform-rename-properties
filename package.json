@@ -1,0 +1,28 @@
+{
+  "name": "babel-plugin-transform-rename-properties",
+  "version": "0.0.1",
+  "description": "Rename JavaScript properties",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": "jviide/babel-plugin-transform-rename-properties",
+  "author": "Joachim Viide <jviide@iki.fi>",
+  "keywords": [
+    "babel-plugin"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint --max-warnings 0 --ignore-path .gitignore ."
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.0.0-0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "chai": "^4.2.0",
+    "eslint": "^6.2.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "mocha": "^6.2.0",
+    "prettier": "^1.18.2"
+  }
+}
