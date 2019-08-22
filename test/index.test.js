@@ -68,7 +68,7 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__" }
       });
     });
-    it("replaces identifiers with string literals when necessary ", () => {
+    it("replaces identifiers with string literals when necessary", () => {
       compare(
         "const { foo: bar } = {}",
         "const { 'I HAVE SPACES': bar } = {}",
@@ -84,13 +84,13 @@ describe("babel-plugin-transform-rename-properties", () => {
     });
   });
 
-  describe("for object expression properties", () => {
+  describe("for object expressions", () => {
     it("replaces identifiers with identifiers when possible", () => {
       compare("const a = { foo: bar }", "const a = { __FOO__: bar }", {
         rename: { foo: "__FOO__" }
       });
     });
-    it("replaces identifiers with string literals when necessary ", () => {
+    it("replaces identifiers with string literals when necessary", () => {
       compare("const a = { foo: bar }", "const a = { 'I HAVE SPACES': bar }", {
         rename: { foo: "I HAVE SPACES" }
       });
@@ -100,21 +100,8 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__" }
       });
     });
-  });
-
-  describe("for object expression methods", () => {
-    it("replaces identifiers with identifiers when possible", () => {
+    it("replaces methods", () => {
       compare("const a = { foo() {} }", "const a = { __FOO__() {} }", {
-        rename: { foo: "__FOO__" }
-      });
-    });
-    it("replaces identifiers with string literals when necessary ", () => {
-      compare("const a = { foo() {} }", "const a = { 'I HAVE SPACES'() {} }", {
-        rename: { foo: "I HAVE SPACES" }
-      });
-    });
-    it("replaces string literals with string literals", () => {
-      compare("const a = { 'foo'() {} }", "const a = { '__FOO__'() {} }", {
         rename: { foo: "__FOO__" }
       });
     });
@@ -127,6 +114,28 @@ describe("babel-plugin-transform-rename-properties", () => {
       compare(
         "const a = { set foo(value) {} }",
         "const a = { set __FOO__(value) {} }",
+        {
+          rename: { foo: "__FOO__" }
+        }
+      );
+    });
+  });
+
+  describe("for classes", () => {
+    it("replaces methods", () => {
+      compare("class A { foo() {} }", "class A { __FOO__() {} }", {
+        rename: { foo: "__FOO__" }
+      });
+    });
+    it("replaces getters", () => {
+      compare("class A { get foo() {} }", "class A { get __FOO__() {} }", {
+        rename: { foo: "__FOO__" }
+      });
+    });
+    it("replaces setters", () => {
+      compare(
+        "class A { set foo(value) {} }",
+        "class A { set __FOO__(value) {} }",
         {
           rename: { foo: "__FOO__" }
         }

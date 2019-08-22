@@ -12,37 +12,40 @@ module.exports = function({ types: t }, options = {}) {
     nameMap.set(key, value);
   });
 
+  const replacePropertyOrMethod = {
+    exit(path) {
+      const node = path.node;
+
+      let name;
+      if (t.isIdentifier(node.key)) {
+        name = node.key.name;
+      } else if (t.isStringLiteral(node.key)) {
+        name = node.key.value;
+      } else {
+        return;
+      }
+
+      const newName = nameMap.get(name);
+      if (newName === undefined) {
+        return;
+      }
+
+      const newNode = t.cloneNode(node, false);
+      if (t.isIdentifier(node.key) && t.isValidIdentifier(newName)) {
+        newNode.key = t.identifier(newName);
+      } else {
+        newNode.key = t.stringLiteral(newName);
+      }
+      path.replaceWith(newNode);
+      path.skip();
+    }
+  };
+
   return {
     name: "transform-rename-properties",
     visitor: {
-      ObjectMember: {
-        exit(path) {
-          const node = path.node;
-
-          let name;
-          if (t.isIdentifier(node.key)) {
-            name = node.key.name;
-          } else if (t.isStringLiteral(node.key)) {
-            name = node.key.value;
-          } else {
-            return;
-          }
-
-          const newName = nameMap.get(name);
-          if (newName === undefined) {
-            return;
-          }
-
-          const newNode = t.cloneNode(node, false);
-          if (t.isIdentifier(node.key) && t.isValidIdentifier(newName)) {
-            newNode.key = t.identifier(newName);
-          } else {
-            newNode.key = t.stringLiteral(newName);
-          }
-          path.replaceWith(newNode);
-          path.skip();
-        }
-      },
+      Property: replacePropertyOrMethod,
+      Method: replacePropertyOrMethod,
       MemberExpression: {
         exit(path) {
           const node = path.node;
