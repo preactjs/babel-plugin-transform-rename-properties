@@ -13,7 +13,16 @@ $ yarn add --dev babel-plugin-transform-rename-properties
 Input file:
 
 ```js
-function foo(obj) {
+const obj = {
+  foo: {
+    bar: 1
+  },
+  quux: 2
+};
+
+const { foo } = obj;
+
+function quux(obj) {
   return obj.foo.bar + obj.quux;
 }
 ```
@@ -39,7 +48,16 @@ function foo(obj) {
 Output:
 
 ```js
-function foo(obj) {
+const obj = {
+  __FOO__: {
+    bar: 1
+  },
+  "I HAVE SPACES": 2
+};
+
+const { __FOO__: foo } = obj;
+
+function quux(obj) {
   return obj.__FOO__.bar + obj["I HAVE SPACES"];
 }
 ```
