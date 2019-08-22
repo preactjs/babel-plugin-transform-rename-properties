@@ -17,13 +17,15 @@ const obj = {
   foo: {
     bar: 1
   },
-  quux: 2
+  quux() {
+    return 2;
+  }
 };
 
 const { foo } = obj;
 
 function quux(obj) {
-  return obj.foo.bar + obj.quux;
+  return obj.foo.bar + obj.quux();
 }
 ```
 
@@ -52,13 +54,15 @@ const obj = {
   __FOO__: {
     bar: 1
   },
-  "I HAVE SPACES": 2
+  "I HAVE SPACES"() {
+    return 2;
+  }
 };
 
 const { __FOO__: foo } = obj;
 
 function quux(obj) {
-  return obj.__FOO__.bar + obj["I HAVE SPACES"];
+  return obj.__FOO__.bar + obj["I HAVE SPACES"]();
 }
 ```
 
