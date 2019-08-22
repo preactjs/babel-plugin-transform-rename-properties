@@ -1,4 +1,4 @@
-# babel-plugin-transform-rename-properties
+# babel-plugin-transform-rename-properties [![CircleCI](https://circleci.com/gh/jviide/babel-plugin-transform-rename-properties.svg?style=shield)](https://circleci.com/gh/jviide/babel-plugin-transform-rename-properties) [![npm](https://img.shields.io/npm/v/babel-plugin-transform-rename-properties.svg)](https://www.npmjs.com/package/babel-plugin-transform-rename-properties)
 
 Rename JavaScript properties.
 
