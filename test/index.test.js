@@ -82,6 +82,11 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__" }
       });
     });
+    it("preserves local variable names", () => {
+      compare("const { foo } = {}", "const { __FOO__: foo } = {}", {
+        rename: { foo: "__FOO__" }
+      });
+    });
   });
 
   describe("for object expressions", () => {
