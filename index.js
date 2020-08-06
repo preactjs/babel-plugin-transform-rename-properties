@@ -50,10 +50,17 @@ module.exports = function({ types: t }, options = {}) {
         exit(path) {
           const node = path.node;
           const prop = node.property;
-          if (prop.computed) {
+
+          let name;
+          if (t.isIdentifier(node.property) && !node.computed) {
+            name = node.property.name;
+          } else if (t.isStringLiteral(node.property)) {
+            name = node.property.value;
+          } else {
             return;
           }
-          const newName = nameMap.get(prop.name);
+
+          const newName = nameMap.get(name);
           if (newName === undefined) {
             return;
           }
