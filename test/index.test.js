@@ -61,14 +61,14 @@ describe("babel-plugin-transform-rename-properties", () => {
       });
     });
 
-    it('does not rename computed properties', () => {
-      compare("obj[foo]", "obj[foo]", {
+    it("does rename computed properties that are simple string literals", () => {
+      compare("obj['foo']", "obj.__FOO__", {
         rename: { foo: "__FOO__" }
       });
     });
 
-    it('does not rename computed properties with string', () => {
-      compare("obj['foo']", "obj.__FOO__", {
+    it("does not rename computed properties that aren't simple string literals", () => {
+      compare("obj[foo]", "obj[foo]", {
         rename: { foo: "__FOO__" }
       });
     });
