@@ -60,6 +60,18 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__", __FOO__: "foo" }
       });
     });
+
+    it('does not rename computed properties', () => {
+      compare("obj[foo]", "obj[foo]", {
+        rename: { foo: "__FOO__" }
+      });
+    });
+
+    it('does not rename computed properties with string', () => {
+      compare("obj['foo']", "obj.__FOO__", {
+        rename: { foo: "__FOO__" }
+      });
+    });
   });
 
   describe("for object pattern properties", () => {
