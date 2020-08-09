@@ -1,8 +1,8 @@
-module.exports = function({ types: t }, options = {}) {
+module.exports = function ({ types: t }, options = {}) {
   const rename = options.rename || {};
 
   const nameMap = new Map();
-  Object.keys(rename).forEach(key => {
+  Object.keys(rename).forEach((key) => {
     const value = rename[key];
     if (typeof value !== "string") {
       throw new Error(
