@@ -99,6 +99,20 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__" },
       });
     });
+    it("replaces computed properties that are simple string literals", () => {
+      compare(
+        "const { ['foo']: bar } = {}",
+        "const { ['__FOO__']: bar } = {}",
+        {
+          rename: { foo: "__FOO__" },
+        }
+      );
+    });
+    it("preserves computed properties that are not simple string literals", () => {
+      compare("const { [foo]: bar } = {}", "const { [foo]: bar } = {}", {
+        rename: { foo: "__FOO__" },
+      });
+    });
   });
 
   describe("for object expressions", () => {
@@ -136,6 +150,16 @@ describe("babel-plugin-transform-rename-properties", () => {
         }
       );
     });
+    it("replaces computed properties that are simple string literals", () => {
+      compare("const a = { ['foo']: bar }", "const a = { ['__FOO__']: bar }", {
+        rename: { foo: "__FOO__" },
+      });
+    });
+    it("preserves computed properties that are not simple string literals", () => {
+      compare("const a = { [foo]: bar }", "const a = { [foo]: bar }", {
+        rename: { foo: "__FOO__" },
+      });
+    });
   });
 
   describe("for classes", () => {
@@ -157,6 +181,16 @@ describe("babel-plugin-transform-rename-properties", () => {
           rename: { foo: "__FOO__" },
         }
       );
+    });
+    it("replaces computed method names that are simple string literals", () => {
+      compare("class A { ['foo']() {} }", "class A { ['__FOO__']() {} }", {
+        rename: { foo: "__FOO__" },
+      });
+    });
+    it("preserves computed properties that are not simple string literals", () => {
+      compare("class A { [foo]() {} }", "class A { [foo]() {} }", {
+        rename: { foo: "__FOO__" },
+      });
     });
   });
 });
