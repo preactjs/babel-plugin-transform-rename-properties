@@ -38,7 +38,7 @@ module.exports = function ({ types: t }, options = {}) {
       }
       path.replaceWith(newNode);
       path.skip();
-    }
+    },
   };
 
   return {
@@ -76,8 +76,8 @@ module.exports = function ({ types: t }, options = {}) {
           }
           path.replaceWith(newNode);
           path.skip();
-        }
-      }
-    }
+        },
+      },
+    },
   };
 };
