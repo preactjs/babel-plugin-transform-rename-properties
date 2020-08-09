@@ -17,7 +17,7 @@ module.exports = function ({ types: t }, options = {}) {
       const node = path.node;
 
       let name;
-      if (t.isIdentifier(node.key)) {
+      if (t.isIdentifier(node.key) && !node.computed) {
         name = node.key.name;
       } else if (t.isStringLiteral(node.key)) {
         name = node.key.value;
