@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-rename-properties",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Rename JavaScript properties",
   "main": "index.js",
   "license": "MIT",
