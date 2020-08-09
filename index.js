@@ -49,7 +49,6 @@ module.exports = function ({ types: t }, options = {}) {
       MemberExpression: {
         exit(path) {
           const node = path.node;
-          const prop = node.property;
 
           let name;
           if (t.isIdentifier(node.property) && !node.computed) {
