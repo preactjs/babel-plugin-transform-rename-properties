@@ -1,8 +1,9 @@
-const t = require("@babel/types");
-const { transform } = require("@babel/core");
-const { parse } = require("@babel/parser");
-const { expect } = require("chai");
-const plugin = require("../index.js");
+import t from "@babel/types";
+import { transform } from "@babel/core";
+import { parse } from "@babel/parser";
+import { expect } from "chai";
+import plugin from "../index.js";
+import { describe, it } from "vitest";
 
 function replace(input, options = {}) {
   return transform(input, {
