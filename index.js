@@ -1,5 +1,16 @@
+const path = require('path');
+
 module.exports = function ({ types: t }, options = {}) {
-  const rename = options.rename || {};
+  let rename = options.rename || {};
+  if (typeof rename === 'string') {
+    try {
+      rename = require(path.resolve(options.cwd || process.cwd(), rename)) || {};
+    } catch (e) {
+      throw new Error(
+        `Unable to load rename file '${rename}': ${e.message}`  
+      );
+    }
+  }
 
   const nameMap = new Map();
   Object.keys(rename).forEach((key) => {
