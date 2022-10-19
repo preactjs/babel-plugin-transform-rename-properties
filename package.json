@@ -4,7 +4,7 @@
   "description": "Rename JavaScript properties",
   "main": "index.js",
   "license": "MIT",
-  "repository": "jviide/babel-plugin-transform-rename-properties",
+  "repository": "preactjs/babel-plugin-transform-rename-properties",
   "author": "Joachim Viide <jviide@iki.fi>",
   "keywords": [
     "babel-plugin"
