@@ -12,7 +12,9 @@
   "scripts": {
     "test": "vitest --run",
     "test:watch": "vitest",
-    "lint": "eslint --max-warnings 0 --ignore-path .gitignore ."
+    "lint": "yarn run tsc && yarn run eslint",
+    "tsc": "tsc --noEmit --allowJs --checkJs --esModuleInterop --skipLibCheck index.js test/index.test.js",
+    "eslint": "eslint --max-warnings 0 --ignore-path .gitignore ."
   },
   "peerDependencies": {
     "@babel/core": "^7.0.0-0"
@@ -23,6 +25,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
+    "typescript": "^5.9.3",
     "vitest": "^0.24.3"
   }
 }
