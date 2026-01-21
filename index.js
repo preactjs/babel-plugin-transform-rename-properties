@@ -1,3 +1,20 @@
+/** Check if node is a template literal with no expressions (e.g., `foo`) */
+function isConstantTemplateLiteral(t, node) {
+  return (
+    t.isTemplateLiteral(node) &&
+    node.expressions.length === 0 &&
+    node.quasis.length === 1
+  );
+}
+
+/** Create a template literal node with no expressions (e.g., `foo`) */
+function constantTemplateLiteral(t, value) {
+  return t.templateLiteral(
+    [t.templateElement({ raw: value, cooked: value }, true)],
+    []
+  );
+}
+
 module.exports = function ({ types: t }, options = {}) {
   const rename = options.rename || {};
 
@@ -90,16 +107,9 @@ module.exports = function ({ types: t }, options = {}) {
 
           if (t.isStringLiteral(node.left)) {
             oldName = node.left.value;
-          } else if (t.isTemplateLiteral(node.left)) {
-            if (
-              node.left.expressions.length === 0 &&
-              node.left.quasis.length === 1
-            ) {
-              oldName = node.left.quasis[0].value.cooked;
-              isTemplateLiteral = true;
-            } else {
-              return;
-            }
+          } else if (isConstantTemplateLiteral(t, node.left)) {
+            oldName = node.left.quasis[0].value.cooked;
+            isTemplateLiteral = true;
           } else {
             return;
           }
@@ -110,10 +120,7 @@ module.exports = function ({ types: t }, options = {}) {
           }
 
           const newNode = isTemplateLiteral
-            ? t.templateLiteral(
-                [t.templateElement({ raw: newName, cooked: newName }, true)],
-                []
-              )
+            ? constantTemplateLiteral(t, newName)
             : t.stringLiteral(newName);
 
           const replacedNode = t.binaryExpression("in", newNode, node.right);
