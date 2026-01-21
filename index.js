@@ -78,6 +78,33 @@ module.exports = function ({ types: t }, options = {}) {
           path.skip();
         },
       },
+      BinaryExpression: {
+        exit(path) {
+          const node = path.node;
+          if (node.operator !== "in") {
+            return;
+          }
+
+          const left = node.left;
+          if (!t.isStringLiteral(left)) {
+            return;
+          }
+
+          const oldName = left.value;
+          const newName = nameMap.get(oldName);
+          if (newName === undefined) {
+            return;
+          }
+
+          const replacedNode = t.binaryExpression(
+            "in",
+            t.stringLiteral(newName),
+            node.right
+          );
+          path.replaceWith(replacedNode);
+          path.skip();
+        },
+      },
     },
   };
 };
