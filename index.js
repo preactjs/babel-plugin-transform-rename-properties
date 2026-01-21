@@ -85,22 +85,38 @@ module.exports = function ({ types: t }, options = {}) {
             return;
           }
 
-          const left = node.left;
-          if (!t.isStringLiteral(left)) {
+          let oldName;
+          let isTemplateLiteral = false;
+
+          if (t.isStringLiteral(node.left)) {
+            oldName = node.left.value;
+          } else if (t.isTemplateLiteral(node.left)) {
+            if (
+              node.left.expressions.length === 0 &&
+              node.left.quasis.length === 1
+            ) {
+              oldName = node.left.quasis[0].value.cooked;
+              isTemplateLiteral = true;
+            } else {
+              return;
+            }
+          } else {
             return;
           }
 
-          const oldName = left.value;
           const newName = nameMap.get(oldName);
           if (newName === undefined) {
             return;
           }
 
-          const replacedNode = t.binaryExpression(
-            "in",
-            t.stringLiteral(newName),
-            node.right
-          );
+          const newNode = isTemplateLiteral
+            ? t.templateLiteral(
+                [t.templateElement({ raw: newName, cooked: newName }, true)],
+                []
+              )
+            : t.stringLiteral(newName);
+
+          const replacedNode = t.binaryExpression("in", newNode, node.right);
           path.replaceWith(replacedNode);
           path.skip();
         },

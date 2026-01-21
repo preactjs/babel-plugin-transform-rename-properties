@@ -229,9 +229,18 @@ describe("babel-plugin-transform-rename-properties", () => {
         rename: { foo: "__FOO__", bar: "__BAR__" },
       });
     });
-    it("does not rename template literal property", () => {
-      compare("`foo` in obj", "`foo` in obj", {
+    it("renames constant template literal property", () => {
+      compare("`foo` in obj", "`__FOO__` in obj", {
         rename: { foo: "__FOO__" },
+      });
+    });
+    it("does not rename non-constant template literal property", () => {
+      compare("`${prop}` in obj", "`${prop}` in obj", {
+        rename: { prop: "__PROP__" },
+      });
+
+      compare("`prop${prop}` in obj", "`prop${prop}` in obj", {
+        rename: { prop: "__PROP__" },
       });
     });
     it("renames nested `in` expressions", () => {
