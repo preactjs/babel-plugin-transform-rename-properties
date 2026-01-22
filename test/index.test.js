@@ -194,4 +194,59 @@ describe("babel-plugin-transform-rename-properties", () => {
       });
     });
   });
+
+  describe("for `in` operator", () => {
+    it("renames string literal property", () => {
+      compare("'foo' in obj", "'__FOO__' in obj", {
+        rename: { foo: "__FOO__" },
+      });
+    });
+    it("does not rename non-literal property", () => {
+      compare("prop in obj", "prop in obj", {
+        rename: { prop: "__PROP__" },
+      });
+
+      compare("('prop' + '1') in obj", "('prop' + '1') in obj", {
+        rename: { prop: "__PROP__" },
+      });
+    });
+    it("does not rename numeric literal property", () => {
+      compare("42 in obj", "42 in obj", {
+        rename: { 42: "__FORTY_TWO__" },
+      });
+    });
+    it("renames multiple `in` expressions", () => {
+      compare(
+        "'foo' in obj && 'bar' in obj",
+        "'__FOO__' in obj && '__BAR__' in obj",
+        {
+          rename: { foo: "__FOO__", bar: "__BAR__" },
+        }
+      );
+    });
+    it("renames `in` when right-hand side contains property access", () => {
+      compare("'foo' in obj.bar", "'__FOO__' in obj.__BAR__", {
+        rename: { foo: "__FOO__", bar: "__BAR__" },
+      });
+    });
+    it("renames constant template literal property", () => {
+      compare("`foo` in obj", "`__FOO__` in obj", {
+        rename: { foo: "__FOO__" },
+      });
+    });
+    it("does not rename non-constant template literal property", () => {
+      compare("`${prop}` in obj", "`${prop}` in obj", {
+        rename: { prop: "__PROP__" },
+      });
+
+      compare("`prop${prop}` in obj", "`prop${prop}` in obj", {
+        rename: { prop: "__PROP__" },
+      });
+    });
+    it("renames nested `in` expressions", () => {
+      compare("'foo' in ('bar' in obj)", "'__FOO__' in ('__BAR__' in obj)", {
+        rename: { foo: "__FOO__", bar: "__BAR__" },
+      });
+    });
+  });
 });
