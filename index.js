@@ -1,4 +1,19 @@
-/** Check if node is a template literal with no expressions (e.g., `foo`) */
+/** @import { PluginObj, NodePath } from '@babel/core' */
+/** @import { Node, Property, Method, MemberExpression, TemplateLiteral } from '@babel/types' */
+/** @import { Visitor } from '@babel/traverse' */
+/** @typedef {typeof import('@babel/types')} BabelTypes */
+
+/**
+ * @typedef {Object} PluginOptions
+ * @property {Record<string, string>} [rename] - A map of property names to rename
+ */
+
+/**
+ * Check if node is a template literal with no expressions (e.g., `foo`)
+ * @param {BabelTypes} t - The Babel types object
+ * @param {Node} node - The AST node to check
+ * @returns {boolean} True if the node is a constant template literal
+ */
 function isConstantTemplateLiteral(t, node) {
   return (
     t.isTemplateLiteral(node) &&
@@ -7,7 +22,12 @@ function isConstantTemplateLiteral(t, node) {
   );
 }
 
-/** Create a template literal node with no expressions (e.g., `foo`) */
+/**
+ * Create a template literal node with no expressions (e.g., `foo`)
+ * @param {BabelTypes} t - The Babel types object
+ * @param {string} value - The string value for the template literal
+ * @returns {TemplateLiteral} The template literal node
+ */
 function constantTemplateLiteral(t, value) {
   return t.templateLiteral(
     [t.templateElement({ raw: value, cooked: value }, true)],
@@ -15,9 +35,16 @@ function constantTemplateLiteral(t, value) {
   );
 }
 
+/**
+ * Babel plugin that renames properties, methods, and member expressions.
+ * @param {{ types: BabelTypes }} babel - The Babel object
+ * @param {PluginOptions} [options] - Plugin options
+ * @returns {PluginObj} The Babel plugin object
+ */
 module.exports = function ({ types: t }, options = {}) {
   const rename = options.rename || {};
 
+  /** @type {Map<string, string>} */
   const nameMap = new Map();
   Object.keys(rename).forEach((key) => {
     const value = rename[key];
@@ -29,10 +56,16 @@ module.exports = function ({ types: t }, options = {}) {
     nameMap.set(key, value);
   });
 
+  /**
+   * Visitor for Property and Method nodes that renames keys.
+   * @type {Visitor}
+   */
   const replacePropertyOrMethod = {
+    /** @param {NodePath<Property | Method>} path */
     exit(path) {
       const node = path.node;
 
+      /** @type {string | undefined} */
       let name;
       if (t.isIdentifier(node.key) && !node.computed) {
         name = node.key.name;
@@ -64,9 +97,11 @@ module.exports = function ({ types: t }, options = {}) {
       Property: replacePropertyOrMethod,
       Method: replacePropertyOrMethod,
       MemberExpression: {
+        /** @param {NodePath<MemberExpression>} path */
         exit(path) {
           const node = path.node;
 
+          /** @type {string | undefined} */
           let name;
           if (t.isIdentifier(node.property) && !node.computed) {
             name = node.property.name;
@@ -81,6 +116,7 @@ module.exports = function ({ types: t }, options = {}) {
             return;
           }
 
+          /** @type {MemberExpression} */
           let newNode;
           if (t.isValidIdentifier(newName)) {
             newNode = t.memberExpression(node.object, t.identifier(newName));
